@@ -1,0 +1,9 @@
+<div class="cell" (click)="onClick()">
+  <span *ngIf="cell.isOpen">
+        {{ cell.neighbourCount }}
+  </span>
+  <span *ngIf="this.cell.isMine">
+        {{ 'mine' }}
+  </span>
+
+</div>
