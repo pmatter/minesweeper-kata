@@ -1,15 +1,15 @@
 <!--The content below is only a placeholder and can be replaced.-->
 
 <a (click)="start()">start</a>
-<h1>{{mineCount}}</h1>
-<div *ngIf="state === STATE.ONGOING" class="minefield">
-  <div  *ngFor="let row of minefield" class="row">
-    <app-cell *ngFor="let cell of row" (onExplode)="explode()" (onOpen)="open(cell)" [cell]="cell"></app-cell>
+<h1>{{mineCount | async}}</h1>
+<div *ngIf="(state | async) === STATE.ONGOING" class="minefield">
+  <div  *ngFor="let row of mineFieldCells | async" class="row">
+    <app-cell *ngFor="let cell of row" (onOpen)="open(cell)" [cell]="cell"></app-cell>
   </div>
 </div>
-<div *ngIf="state === STATE.LOST" class="minefield">
+<div *ngIf="(state | async) === STATE.LOST" class="minefield">
   you lost
 </div>
-<div *ngIf="state === STATE.WON" class="minefield">
+<div *ngIf="(state | async) === STATE.WON" class="minefield">
   you won
 </div>
