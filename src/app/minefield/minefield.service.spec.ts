@@ -15,14 +15,6 @@ describe('MinefieldService', () => {
   });
 
   it('should create a minefield', () => {
-    expect(service.createMinefield().field.length).toBe(4);
-  });
-
-  it('should have no revealed fields', () => {
-    expect(service.createMinefield().revealed).toBe(0);
-  });
-
-  it('should have 1 mine', () => {
-    expect(service.createMinefield().mines).toBe(1);
+    expect(service.createMinefield().length).toBe(4);
   });
 });

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {Minefield} from './minefield/minefield.class';
 import {MinefieldService} from './minefield/minefield.service';
+import {Cell} from './minefield/cell.class';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +8,7 @@ import {MinefieldService} from './minefield/minefield.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  mineField: Minefield;
+  minefield: Cell[][];
 
   constructor(private minefieldService: MinefieldService) {
   }
@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
   }
 
   start() {
-    this.mineField = this.minefieldService.createMinefield(4);
+    this.minefield = this.minefieldService.createMinefield(4);
   }
 
 }
