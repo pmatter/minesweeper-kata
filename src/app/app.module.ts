@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CellComponent } from './cell/cell.component';
 import {StoreModule} from '@ngrx/store';
-import {minefieldReducer} from './minefield/minefield.recuder';
+import {minefieldReducer} from './store/minefield.recuder';
 
 @NgModule({
   declarations: [

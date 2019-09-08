@@ -3,7 +3,7 @@
 <a (click)="start()">start</a>
 <h1>{{mineCount | async}}</h1>
 <div *ngIf="(state | async) === STATE.ONGOING" class="minefield">
-  <div  *ngFor="let row of mineFieldCells | async" class="row">
+  <div  *ngFor="let row of mineField | async" class="row">
     <app-cell *ngFor="let cell of row" (onOpen)="open(cell)" [cell]="cell"></app-cell>
   </div>
 </div>

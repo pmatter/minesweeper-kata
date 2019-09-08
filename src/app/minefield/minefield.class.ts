@@ -1,80 +1,89 @@
-import {Cell} from '../cell.class';
+import {Cell} from './cell.class';
 
 export class Minefield {
 
-  constructor(public field: Cell[][], public mineCount: number) {
+  constructor(public field: Cell[][], private size: number) {
   }
 
-  private static placeMine(minefield: Cell[][]): Cell[][] {
-    const x = Math.floor(Math.random() * 4);
-    const y = Math.floor(Math.random() * 4);
-    const mine = Cell.mine(x, y);
-    minefield[x][y] = mine;
-    this.neighbours(minefield, mine).forEach(c => c.increaseNeigbours());
-    return minefield;
+  public get mines(): number {
+    const cells = this.field.reduce((x, y) => { x.push(... y); return x; }, []);
+    return cells.filter(c => c.isMine).length;
   }
 
-  public static neighbours(field: Cell[][], cell: Cell) {
-    return this.findNeighbours(field, cell.x, cell.y, 0, 4 - 1);
+  public get revealed(): number {
+    const cells = this.field.reduce((x, y) => { x.push(... y); return x; }, []);
+    return cells.filter(c => c.isOpen).length;
   }
 
-  private static findNeighbours(field: Cell[][], x: number, y: number, lowerBoundary: number, upperBoundary: number): Cell[] {
+  public get hasWon(): boolean {
+    return this.revealed === (this.size * this.size) - this.mines;
+  }
+
+  static createMinefield(size: number): Minefield {
+    const mineField = [];
+    for (let i = 0; i < size; i++) {
+      const row = [];
+      for (let j = 0; j < size; j++) {
+        row.push(Cell.initial(i, j));
+      }
+      mineField.push(row);
+    }
+    return new Minefield(mineField, size );
+  }
+
+  static create(size: number = 4, chooseMine = (mineField: Minefield) => mineField.getRandomCell() ): Minefield {
+    const field = Minefield.createMinefield(size);
+    field.placeMine(chooseMine(field));
+    return field;
+  }
+
+  public reveal(x: number, y: number): Cell {
+    const cell = this.field[x][y];
+    this.revealNeighbours(cell);
+    cell.open();
+    return cell;
+  }
+
+  public placeMine(cell: Cell): void {
+    cell.isMine = true ;
+    this.findNeighbours(cell).forEach(c => c.increaseNeigbourCount());
+  }
+
+  private revealNeighbours(cell: Cell) {
+    this.findNeighbours(cell).forEach(c => {
+      if (c.neighbourCount === 0 && !c.isOpen && !c.isMine) {
+        c.open();
+        this.revealNeighbours(c);
+      }
+    });
+  }
+
+  private findNeighbours(cell: Cell): Cell[] {
     const neighbours = [];
-    for (let i = x - 1; i <= x + 1; i++) {
-      for (let j = y - 1; j <= y + 1; j++) {
-        if (this.skipSelf(i, x, j, y) &&
-          this.withinRange(i, lowerBoundary, upperBoundary) &&
-          this.withinRange(j, lowerBoundary, upperBoundary)) {
-          neighbours.push(field[i][j]);
+    for (let i = cell.x - 1; i <= cell.x + 1; i++) {
+      for (let j = cell.y - 1; j <= cell.y + 1; j++) {
+        if (this.skipSelf(i, cell.x, j, cell.y) &&
+          this.withinRange(i) &&
+          this.withinRange(j)) {
+          neighbours.push(this.field[i][j]);
         }
       }
     }
     return neighbours;
   }
 
-  private static withinRange(i, lowerBoundary: number, upperBoundary: number) {
-    return i > (lowerBoundary - 1) && i <= upperBoundary;
-  }
-
-  private static createMinefield(x: number, y: number): Cell[][] {
-    const mineField = [];
-    for (let i = 0; i < x; i++) {
-      const row = [];
-      for (let j = 0; j < y; j++) {
-        row.push(Cell.initial(i, j));
-      }
-      mineField.push(row);
-    }
-    return mineField;
-  }
-
-  private static skipSelf(i: number, x: number, j: number, y: number): boolean {
+  private skipSelf(i: number, x: number, j: number, y: number): boolean {
     return !(i === x && j === y);
   }
 
-  public static countMines(minefield: Cell[][]): number {
-    const cells = minefield.reduce((x, y) => { x.push(... y); return x; }, []);
-    return cells.filter(c => c.isMine).length;
+  private withinRange(i) {
+    return i >=  0 && i < this.size;
   }
 
-  static countOpened(minefield: Cell[][]) {
-    const cells = minefield.reduce((x, y) => { x.push(... y); return x; }, []);
-    return cells.filter(c => c.isOpen).length;
+  public getRandomCell(): Cell {
+    return this.field
+      [Math.floor(Math.random() * this.size)]
+      [Math.floor(Math.random() * this.size)];
   }
 
-  public static create(): Minefield {
-    const field = this.createMinefield(4, 4);
-    this.placeMine(field);
-
-    return new Minefield(field, this.countMines(field));
-  }
-
-  static openNeighbours(cells: Cell[][], cell: Cell) {
-    Minefield.neighbours(cells, cell).forEach(c => {
-      if (c.neighbourCount === 0 && !c.isOpen && !c.isMine) {
-        c.open();
-        Minefield.openNeighbours(cells, c);
-      }
-    });
-  }
 }

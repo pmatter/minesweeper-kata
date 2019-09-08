@@ -1,8 +1,5 @@
 
 export class Cell {
-  public static mine(x, y): Cell {
-    return new Cell(x, y, 0, true);
-  }
 
   public static initial(x, y): Cell {
     return new Cell(x, y, 0, false);
@@ -11,11 +8,11 @@ export class Cell {
   constructor(public x: number,
               public y: number,
               public neighbourCount = 0,
-              public readonly isMine = false,
+              public isMine = false,
               public isOpen = false) {
   }
 
-  increaseNeigbours() {
+  increaseNeigbourCount() {
     this.neighbourCount++;
   }
 

@@ -1,9 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-import {Cell} from './cell.class';
+import {Cell} from './minefield/cell.class';
 import {Store} from '@ngrx/store';
-import {restart, reveal} from './minefield/minefield.action';
-import {AppState, selectCells, selectGameState, selectMineCount, selectOpenedCount, STATE} from './minefield/minefield.selector';
+import {restart, reveal} from './store/minefield.action';
+import {
+  AppState,
+  selectGameState,
+  selectMineCount,
+  selectMinefield,
+  STATE
+} from './store/minefield.selector';
 import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +20,7 @@ import {Observable} from 'rxjs';
 export class AppComponent implements OnInit {
   STATE = STATE;
   title = 'minesweeper';
-  mineFieldCells: Observable<Cell[][]>;
+  mineField: Observable<Cell[][]>;
   mineCount: Observable<number>;
   state: Observable<STATE>;
 
@@ -25,7 +32,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.mineFieldCells = this.store.select(selectCells);
+    this.mineField = this.store.select(selectMinefield).pipe(
+      map(m => m.field)
+    );
     this.mineCount = this.store.select(selectMineCount);
     this.state =  this.store.select(selectGameState);
   }

@@ -1,5 +1,5 @@
 import {Component, DoCheck, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Cell} from '../cell.class';
+import {Cell} from '../minefield/cell.class';
 
 @Component({
   selector: 'app-cell',

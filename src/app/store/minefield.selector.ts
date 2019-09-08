@@ -1,5 +1,4 @@
-import {Cell} from '../cell.class';
-import {Minefield} from './minefield.class';
+import {Minefield} from '../minefield/minefield.class';
 import {createSelector} from '@ngrx/store';
 
 export enum STATE {
@@ -9,7 +8,7 @@ export enum STATE {
 }
 
 export interface FeatureState {
-  cells: Cell[][];
+  minefield: Minefield;
   state: STATE;
 }
 
@@ -17,16 +16,16 @@ export interface AppState {
   game: FeatureState;
 }
 
-export const selectCells = (state: AppState) => state.game.cells;
+export const selectMinefield = (state: AppState) => state.game.minefield;
 
 export const selectGameState = (state: AppState) => state.game.state;
 
 export const selectMineCount = createSelector(
-  selectCells,
-  (state: Cell[][]) => Minefield.countMines(state)
+  selectMinefield,
+  (state: Minefield) => state.mines
 );
 
 export const selectOpenedCount = createSelector(
-  selectCells,
-  (state: Cell[][]) => Minefield.countOpened(state)
+  selectMinefield,
+  (state: Minefield) => state.revealed
 );
