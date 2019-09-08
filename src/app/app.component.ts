@@ -22,14 +22,14 @@ export class AppComponent {
 
   constructor() {
     this.start();
-    this.minefield = this.createMinefield(4, 4);
-    this.minefield = this.placeMine(this.minefield);
-    this.mineCount = this.countMines(this.minefield);
   }
 
   private start() {
     this.state = STATE.ONGOING;
     this.opened = 0;
+    this.minefield = this.createMinefield(4, 4);
+    this.minefield = this.placeMine(this.minefield);
+    this.mineCount = this.countMines(this.minefield);
   }
 
   private placeMine(minefield: Cell[][]): Cell[][] {

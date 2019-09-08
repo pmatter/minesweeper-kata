@@ -1,7 +1,6 @@
 <!--The content below is only a placeholder and can be replaced.-->
 
-<a (click)="start()">start</a>
-<h1>{{mineCount}}</h1>
+<a (click)="start()">start new game</a>
 <div *ngIf="state === STATE.ONGOING" class="minefield">
   <div  *ngFor="let row of minefield" class="row">
     <app-cell *ngFor="let cell of row" (onExplode)="explode()" (onOpen)="open(cell)" [cell]="cell"></app-cell>
