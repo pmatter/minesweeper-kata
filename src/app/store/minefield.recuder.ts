@@ -28,7 +28,7 @@ export const minefieldReducer = createReducer(initialState,
       newState.state = STATE.LOST;
       return newState;
     }
-    if (newState.minefield.hasWon()) {
+    if (newState.minefield.hasWon) {
       newState.state = STATE.WON;
       return newState;
     }
